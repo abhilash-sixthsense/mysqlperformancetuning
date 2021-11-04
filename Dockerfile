@@ -11,11 +11,11 @@ RUN apt-get install -y  python3.9-dev python3-pip
 RUN apt-get install python3.9-venv -y
 RUN python3.9 -m venv /root/venv
 ENV PATH="/root/venv/bin:$PATH"
-COPY requirements.txt .
 RUN apt-get install gcc libffi-dev -y
-RUN pip install -U wheel pip 
-RUN pip install -r requirements.txt
-COPY . /root/app
 RUN apt-get install git gitk -y
 RUN apt-get install build-essential -y
+COPY client/requirements.txt .
+RUN pip install -U wheel pip 
+RUN pip install -r requirements.txt
+COPY ./client /root/app
 
