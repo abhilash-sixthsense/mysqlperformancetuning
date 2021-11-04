@@ -1,0 +1,7 @@
+autopep8==1.6.0
+cffi==1.15.0
+cryptography==35.0.0
+pycodestyle==2.8.0
+pycparser==2.20
+PyMySQL==1.0.2
+toml==0.10.2
