@@ -2,6 +2,7 @@
 import pymysql
 
 from random_sql_load_test import RandomSqlLoadTest
+from multiprocessing import Pool
 
 # Check db connectivity
 print("Hello")
@@ -18,7 +19,14 @@ def check_db_connectivity():
     print("Db connection successful")
 
 
+def run_test(size):
+    test = RandomSqlLoadTest(size)
+    test.start()
+
+
 if __name__ == '__main__':
     check_db_connectivity()
-    test = RandomSqlLoadTest(100000)
-    test.start()
+    p_count = 50
+    pargs = [1000 for _ in range(p_count)]
+    with Pool(p_count) as p:
+        p.map(run_test, pargs)
