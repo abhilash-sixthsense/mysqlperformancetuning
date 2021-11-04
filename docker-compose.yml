@@ -1,0 +1,27 @@
+version: "3.9" # optional since v1.27.0
+services:
+  db:
+    # build: .
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: clientuser
+      MYSQL_DATABASE: clientuser
+      MYSQL_USER: clientuser
+      MYSQL_PASSWORD: clientuser
+
+    ports:
+      - "3306:3306"
+    # volumes:
+  app:
+    build: .
+    command: tail -f /dev/null
+    volumes:
+      - ./client:/root/app
+    environment:
+      DB_HOST: db
+      DB_USER: clientuser
+      DB_PASSWORD: clientuser
+      DB_NAME: clientuser
+      DB_PORT: 3306
+      MQ_HOST: rabbitmq
+    depends_on: [db]

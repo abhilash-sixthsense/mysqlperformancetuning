@@ -1,0 +1,104 @@
+[mysql]
+
+# CLIENT #
+port                           = 3306
+socket                         = /var/run/mysqld/mysqld.sock
+default-character-set          = utf8
+
+[mysqld]
+
+# GENERAL #
+user                           = mysql
+default-storage-engine         = InnoDB
+socket                         = /var/run/mysqld/mysqld.sock
+pid-file                       = /var/run/mysqld/mysqld.pid
+bind-address            	   = 0.0.0.0
+#character-set-server           = utf8
+#collation-server               = utf8_general_ci
+skip-character-set-client-handshake
+sql_mode=""
+# Case Sensitivity #
+#lower_case_table_names         = 1
+
+# MyISAM #
+#key-buffer-size                = 32M
+#myisam-recover                 = FORCE,BACKUP
+
+# SAFETY #
+max-allowed-packet             = 64M
+max-connect-errors             = 1000000
+
+# DATA STORAGE #
+datadir                        = /opt/mysql
+
+# CACHES AND LIMITS #
+tmp-table-size                 = 32M
+max-heap-table-size            = 32M
+max-connections                = 1000
+thread-cache-size              = 100
+open-files-limit               = 65535
+table-definition-cache         = 4096
+#table-open-cache               = 4096
+
+# INNODB #
+innodb-flush-method            = O_DIRECT
+innodb-log-files-in-group      = 2
+innodb-log-file-size           = 512M
+innodb-flush-log-at-trx-commit = 2 #You can lose up to one second's worth of transactions. The default value is 1, which helps keep InnoDB ACID Compliant.
+innodb-file-per-table          = 1
+innodb-buffer-pool-size        = 4G
+innodb_buffer_pool_instances   = 4 #Modified from Default value of 8
+# LOGGING #
+log-error                      = /opt/mysql/mysql-error.log
+#log-queries-not-using-indexes  = 1
+long_query_time 	           = 0.010
+slow-query-log                 = 1
+slow-query-log-file            = /opt/mysql/mysql-slownov3-920pm.log
+#Slow Query Logging Factors
+#log_queries_not_using_indexes = 0
+#general_log_file   = /var/log/mysql/general-mysql-oct29-2pm.log
+#general_log        = 1
+# CUSTOM Configs #
+# Based on the Error Logs in 
+# binlog_format 		      = MIXED
+
+# Skip reverse DNS lookup of clients
+skip-name-resolve
+
+## Performance Addition for Write Intensive DB - Modify according to use cases ##
+
+innodb_io_capacity=1000 # from 200 to allow more IOPSecond to your storage device
+innodb_io_capacity_max=2800 # from 2000 to allow more IOPSecond to your storage device
+innodb_lru_scan_depth=100  # from 1024 to conserve 90% CPU cycles used for function
+innodb_flush_neighbors=2 # from 0 to expedite writing to current extent
+innodb_max_dirty_pages_pct_lwm=1  # from 10 percent to expedite writes
+innodb_max_dirty_pages_pct=1  # from 90 percent to reduce innodb_buffer_pool_pages_dirty count
+innodb_change_buffer_max_size=50  # from 25 percent to expedite your high volume activity
+
+## House keeping Of Binay Logs ##
+expire_logs_days	 = 4
+
+
+## Number of I/O threads for writes
+innodb_write_io_threads = 8
+## Number of I/O threads for reads
+innodb_read_io_threads = 8
+
+## DB Engine Logging Possible Data Corruption and Integity of Data ##
+#innodb_doublewrite = 0 # Use it for diagnostics
+#skip_log_bin # Use it for diagnostics
+
+innodb_stats_auto_recalc=OFF  # to encourage consistent query completion
+innodb_stats_persistent=OFF  # to encourage consistent query completion
+connect_timeout=30  # from 10 seconds limit to reduce aborted_connections count
+table_open_cache=8000  # from 4000 to reduce tables_opened thrashing 
+innodb_open_files=8000  # to ALWAYS match to table_open_cache - BEST PRACTICE
+table_open_cache_instances=16  # to reduce mutex contention with tables_opened frequency
+wait_timeout=7200  # from 28800 for 2 hours of inactivity before timeout
+interactive_timeout=7200  # from 28800 for 2 hours of MySQL Command Prompt inactivity before timeout
+join_buffer_size = 32M
+
+
+innodb_spin_wait_delay = 2 
+
+# Read Documentation related to each parameters and choose the appropriate values based on the use cases.
